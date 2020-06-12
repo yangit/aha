@@ -1,0 +1,23 @@
+homeassistant: false
+permit_join: true
+mqtt:
+  base_topic: zigbee2mqtt
+  server: 'mqtt://verne'
+  include_device_information: true
+serial:
+  port: /dev/ttyACM0
+advanced:
+  log_level: info
+  log_output:
+    - console
+  last_seen: ISO_8601_local
+  elapsed: true
+devices:
+  '0x00158d0002333e97':
+    friendly_name: '0x00158d0002333e97'
+  '0x00158d00020b4ab6':
+    friendly_name: '0x00158d00020b4ab6'
+  '0x00158d0001aa966f':
+    friendly_name: '0x00158d0001aa966f'
+  '0x00158d0001f2ac03':
+    friendly_name: '0x00158d0001f2ac03'

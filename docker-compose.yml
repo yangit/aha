@@ -1,15 +1,23 @@
   version: '3'
   services:
+    verne:
+      image: vernemq/vernemq 
+      restart: always
+      container_name: verne
+      ports: 
+        - 8080:8080
+      environment: 
+        DOCKER_VERNEMQ_ACCEPT_EULA: 'yes'
+        DOCKER_VERNEMQ_ALLOW_ANONYMOUS: 'on' 
     zigbee2mqtt:
       container_name: zigbee2mqtt
       image: koenkk/zigbee2mqtt
       volumes:
-        - ./data:/app/data
+        - ./zigbee2mqttdata:/app/data
         - /run/udev:/run/udev:ro
       devices:
         - /dev/ttyACM0:/dev/ttyACM0
       restart: always
-      network_mode: host
       privileged: true
       environment:
         - TZ=Asia/Makassar
