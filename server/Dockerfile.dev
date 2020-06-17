@@ -1,5 +1,5 @@
 FROM node:12.13.0
-WORKDIR /code/
+WORKDIR /code/server
 # COPY ./package.json /
 # COPY ./package-lock.json /
 # RUN cd / && npm i

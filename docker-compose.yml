@@ -1,7 +1,5 @@
 version: '3'
 
-volumes:
-  postgresdb:
 services:
   server:
     build:
@@ -12,20 +10,7 @@ services:
     ports:
       - 6603:80
     restart: always
-    command: /code/server/node_modules/.bin/ts-node-dev --transpile-only /code/server/index.ts
+    command: ./node_modules/.bin/ts-node-dev --transpile-only ./index.ts
     # command: tail -f /dev/null
     env_file:
       - ./server/.dev.env
-  postgres:
-    image: postgres:latest
-    restart: always
-    env_file:
-      - ./server/.dev.env
-    ports:
-      - '6602:5432'
-    logging:
-      driver: 'json-file'
-      options:
-        max-size: '1m'
-    volumes:
-      - postgresdb:/var/lib/postgresql/data
