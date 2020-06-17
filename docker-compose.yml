@@ -1,5 +1,6 @@
 version: '3'
-
+volumes:
+  postgresdb:
 services:
   server:
     build:
@@ -14,3 +15,18 @@ services:
     # command: tail -f /dev/null
     env_file:
       - ./server/.dev.env
+  # postgres:
+  #   image: postgres:latest
+  #   restart: always
+  #   environment:
+  #     - POSTGRES_USER=aha
+  #     - POSTGRES_PASSWORD=ahapassword
+  #     - POSTGRES_DB=aha
+  #   ports:
+  #     - '6604:5432'
+  #   logging:
+  #     driver: 'json-file'
+  #     options:
+  #       max-size: '1m'
+  #   volumes:
+  #     - postgresdb:/var/lib/postgresql/data
