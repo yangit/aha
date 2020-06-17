@@ -1,0 +1,51 @@
+version: '3'
+services:
+  server:
+    build:
+      dockerfile: ./server/Dockerfile.dev
+      context: ./
+    volumes:
+      - ./server:/code/server
+    ports:
+      - 6603:80
+    restart: always
+    command: ../node_modules/.bin/ts-node-dev --transpile-only ./index.ts
+    # command: tail -f /dev/null
+    env_file:
+      - ./server/.dev.env
+  postgres:
+    image: postgres:latest
+    restart: always
+    environment:
+      - POSTGRES_USER=aha
+      - POSTGRES_PASSWORD=ahapassword
+      - POSTGRES_DB=aha
+    ports:
+      - '6602:5432'
+    logging:
+      driver: 'json-file'
+      options:
+        max-size: '1m'
+    volumes:
+      - postgresdb_hypnos:/var/lib/postgresql/data
+  verne:
+    image: vernemq/vernemq
+    restart: always
+    container_name: verne
+    ports:
+      - 6601:8080
+    environment:
+      DOCKER_VERNEMQ_ACCEPT_EULA: 'yes'
+      DOCKER_VERNEMQ_ALLOW_ANONYMOUS: 'on'
+  zigbee2mqtt:
+    container_name: zigbee2mqtt
+    image: koenkk/zigbee2mqtt
+    volumes:
+      - ./zigbee2mqttdata:/app/data
+      - /run/udev:/run/udev:ro
+    devices:
+      - /dev/ttyACM0:/dev/ttyACM0
+    restart: always
+    privileged: true
+    environment:
+      - TZ=Asia/Makassar

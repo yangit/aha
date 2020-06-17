@@ -1,0 +1,6 @@
+FROM node:12.13.0
+WORKDIR /code/
+# COPY ./package.json /
+# COPY ./package-lock.json /
+# RUN cd / && npm i
+HEALTHCHECK --interval=1s --timeout=1s CMD curl -f http://localhost/health || exit 1
