@@ -7,6 +7,7 @@ import { Consumption } from '../models/consumption';
 import { Occupancy } from '../models/occupancy';
 import { Click } from '../models/click';
 import seedDb from '../utils/seedDb';
+import { isClimate, isConsumption, isClick, isOccupancy, isAction } from '../utils/typeGuard';
 
 export default {
   onStart: async () => {
@@ -71,20 +72,22 @@ export default {
           topic,
           last_seen: new Date(json.last_seen),
           createdAt,
+          isAction: isAction(json),
         }).save();
-        if (typeof json.humidity !== 'undefined' && typeof json.temperature !== 'undefined') {
+
+        if (isClimate(json)) {
           await new Climate({ ...json, eventId, createdAt }).save();
           return;
         }
-        if (typeof json.consumption !== 'undefined') {
+        if (isConsumption(json)) {
           await new Consumption({ ...json, eventId, createdAt }).save();
           return;
         }
-        if (typeof json.occupancy !== 'undefined') {
+        if (isOccupancy(json)) {
           await new Occupancy({ ...json, eventId, createdAt }).save();
           return;
         }
-        if (typeof json.click !== 'undefined') {
+        if (isClick(json)) {
           await new Click({ ...json, eventId, createdAt }).save();
           return;
         }

@@ -19,6 +19,150 @@
   "links": [],
   "panels": [
     {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 0
+      },
+      "id": 8,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "ago"
+          }
+        ]
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT distinct on (device.id)\n TO_CHAR(AGE(now(), MAX(event.\"createdAt\")),'HH24:MI:SS') as \"lastSeen\" ,concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\",device.id ) as device ,device.type,device.\"ieeeAddr\",device.\"modelId\"\nFROM\n  device\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\nLEFT JOIN event ON device.id =event.\"deviceId\"\nGROUP By device.id,location.name,\"deviceModel\".name",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Devices",
+      "type": "table"
+    },
+    {
+      "datasource": null,
+      "fieldConfig": {
+        "defaults": {
+          "custom": {
+            "align": null
+          },
+          "mappings": [],
+          "thresholds": {
+            "mode": "absolute",
+            "steps": [
+              {
+                "color": "green",
+                "value": null
+              },
+              {
+                "color": "red",
+                "value": 80
+              }
+            ]
+          }
+        },
+        "overrides": []
+      },
+      "gridPos": {
+        "h": 8,
+        "w": 12,
+        "x": 0,
+        "y": 8
+      },
+      "id": 6,
+      "options": {
+        "showHeader": true,
+        "sortBy": [
+          {
+            "desc": false,
+            "displayName": "time"
+          }
+        ]
+      },
+      "pluginVersion": "7.0.3",
+      "targets": [
+        {
+          "format": "table",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  TO_CHAR(AGE(now(),event.\"createdAt\"),'HH24:MI:SS') AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\",device.id ) as device\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\nWHERE\n  $__timeFilter(event.\"createdAt\") AND\n  event.\"isAction\"=true\nORDER BY event.\"createdAt\" DESC\nLIMIT 100",
+          "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        }
+      ],
+      "timeFrom": null,
+      "timeShift": null,
+      "title": "Recent isAction",
+      "type": "table"
+    },
+    {
       "aliasColors": {},
       "bars": false,
       "dashLength": 10,
@@ -36,7 +180,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 0
+        "y": 16
       },
       "hiddenSeries": false,
       "id": 4,
@@ -69,8 +213,80 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\" ) as device,\n 1 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\nWHERE\n  $__timeFilter(event.\"createdAt\")\nORDER BY 1",
+          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\" ) as ddevice,\n 1 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\n\nWHERE\n  $__timeFilter(event.\"createdAt\") AND device.\"modelId\"='WXKG11LM'\nORDER BY 1\n",
           "refId": "A",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\" ) as ddevice,\n 2 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\n\nWHERE\n  $__timeFilter(event.\"createdAt\") AND device.\"modelId\"='WSDCGQ01LM'\nORDER BY 1\n",
+          "refId": "B",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\" ) as ddevice,\n 0 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\n\nWHERE\n  $__timeFilter(event.\"createdAt\") AND device.\"modelId\"='ZNCZ02LM'\nORDER BY 1\n",
+          "refId": "C",
+          "select": [
+            [
+              {
+                "params": ["value"],
+                "type": "column"
+              }
+            ]
+          ],
+          "timeColumn": "time",
+          "where": [
+            {
+              "name": "$__timeFilter",
+              "params": [],
+              "type": "macro"
+            }
+          ]
+        },
+        {
+          "format": "time_series",
+          "group": [],
+          "metricColumn": "none",
+          "rawQuery": true,
+          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\" ) as ddevice,\n 3 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\n\nWHERE\n  $__timeFilter(event.\"createdAt\") AND device.\"modelId\"='RTCGQ01LM'\nORDER BY 1\n",
+          "refId": "D",
           "select": [
             [
               {
@@ -165,7 +381,7 @@
         "h": 8,
         "w": 12,
         "x": 0,
-        "y": 8
+        "y": 24
       },
       "hiddenSeries": false,
       "id": 2,
@@ -188,7 +404,7 @@
       "percentage": false,
       "pluginVersion": "7.0.3",
       "pointradius": 2,
-      "points": false,
+      "points": true,
       "renderer": "flot",
       "seriesOverrides": [],
       "spaceLength": 10,
@@ -272,7 +488,7 @@
     "list": []
   },
   "time": {
-    "from": "now-3h",
+    "from": "now-6h",
     "to": "now"
   },
   "timepicker": {
@@ -291,5 +507,5 @@
   "timezone": "",
   "title": "Aha",
   "uid": "G_hGxnWGz",
-  "version": 2
+  "version": 10
 }

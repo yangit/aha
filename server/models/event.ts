@@ -25,6 +25,8 @@ export class Event extends Model {
 
   public linkquality: number;
 
+  public isAction: boolean;
+
   public readonly createdAt!: Date;
 }
 
@@ -34,6 +36,7 @@ export const EventInit = (sequelize: any) => {
       id: { type: DataTypes.INTEGER, autoIncrement: true, primaryKey: true, allowNull: false },
       topic: { type: DataTypes.STRING, allowNull: false },
       battery: { type: DataTypes.INTEGER, allowNull: true },
+      isAction: { type: DataTypes.BOOLEAN, allowNull: false },
       voltage: { type: DataTypes.INTEGER, allowNull: true },
       linkquality: { type: DataTypes.INTEGER, allowNull: false },
       last_seen: { type: DataTypes.DATE, allowNull: false },
