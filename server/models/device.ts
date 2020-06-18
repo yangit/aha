@@ -9,7 +9,7 @@ export class Device extends Model {
 
   public name: string;
 
-  public model: string;
+  public modelId: string;
 
   public readonly createdAt!: Date;
 }
@@ -21,7 +21,6 @@ export const DeviceInit = (sequelize: any) => {
       friendlyName: { type: DataTypes.STRING, allowNull: false },
       ieeeAddr: { type: DataTypes.STRING, allowNull: false },
       name: { type: DataTypes.STRING, allowNull: true },
-      model: { type: DataTypes.STRING },
     },
     { sequelize, tableName: 'device' },
   );

@@ -6,6 +6,7 @@ import { ClimateInit, Climate } from '../models/climate';
 import { DeviceInit, Device } from '../models/device';
 import { EventInit, Event } from '../models/event';
 import { ConsumptionInit, Consumption } from '../models/consumption';
+import { DeviceModelInit, DeviceModel } from '../models/deviceModel';
 
 export default async () => {
   const pgurl = `postgres://${config.get('POSTGRES_USER')}:${config.get('POSTGRES_PASSWORD')}@${config.get(
@@ -26,12 +27,24 @@ export default async () => {
 
       process.exit();
     });
-
   MessageInit(sequelize);
-  ClimateInit(sequelize);
+  DeviceModelInit(sequelize);
   DeviceInit(sequelize);
   EventInit(sequelize);
+  ClimateInit(sequelize);
   ConsumptionInit(sequelize);
+  Device.belongsTo(DeviceModel, {
+    foreignKey: {
+      name: 'modelId',
+      allowNull: false,
+    },
+  });
+  Event.belongsTo(Device, {
+    foreignKey: {
+      name: 'deviceId',
+      allowNull: false,
+    },
+  });
   Climate.belongsTo(Event, {
     foreignKey: {
       name: 'eventId',
@@ -44,12 +57,7 @@ export default async () => {
       allowNull: false,
     },
   });
-  Event.belongsTo(Device, {
-    foreignKey: {
-      name: 'deviceId',
-      allowNull: false,
-    },
-  });
+
   await sequelize.sync();
   return sequelize;
 };

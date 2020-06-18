@@ -28,7 +28,7 @@ if (!processor) {
 }
 // eslint-disable-next-line import/no-dynamic-require
 
-const { map, onEnd } = processor;
+const { map, onEnd, onStart } = processor;
 let interval: NodeJS.Timeout;
 const main = async () => {
   await postgres();
@@ -50,7 +50,7 @@ const main = async () => {
   interval = setInterval(() => {
     console.log(`${i}/${count}`);
   }, 2000);
-
+  await onStart();
   const query = new QueryStream('SELECT * FROM message');
   await new Promise((resolve, reject) => {
     const stream = client.query(query);
