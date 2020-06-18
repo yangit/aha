@@ -19,7 +19,7 @@ export class Event extends Model {
 
   public voltage: number;
 
-  public elapsed: number;
+  public elapsed?: number;
 
   public last_seen: Date;
 
@@ -37,7 +37,7 @@ export const EventInit = (sequelize: any) => {
       voltage: { type: DataTypes.INTEGER, allowNull: true },
       linkquality: { type: DataTypes.INTEGER, allowNull: false },
       last_seen: { type: DataTypes.DATE, allowNull: false },
-      elapsed: { type: DataTypes.INTEGER, allowNull: false },
+      elapsed: { type: DataTypes.INTEGER, allowNull: true },
     },
     { sequelize, tableName: 'event' },
   );

@@ -46,7 +46,7 @@ const main = async () => {
 
   console.log({ count });
 
-  const i = 0;
+  let i = 0;
   interval = setInterval(() => {
     console.log(`${i}/${count}`);
   }, 2000);
@@ -60,6 +60,7 @@ const main = async () => {
       new Transform({
         writableObjectMode: true,
         transform: async (chunk, _encoding, callback) => {
+          i += 1;
           try {
             const data = await map(chunk);
             callback(null, data);

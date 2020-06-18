@@ -15,7 +15,6 @@ export default {
     await Consumption.drop();
     await Occupancy.drop();
     await Event.drop();
-
     // await Device.drop();
     // await DeviceModel.drop();
     // await Location.drop();
@@ -34,12 +33,20 @@ export default {
     await seedDb();
   },
   onEnd: async () => {},
-  map: async ({ topic, json }: { topic: string; json: Record<string, any> }) => {
+  map: async ({
+    topic,
+    json,
+    createdAt = new Date(),
+  }: {
+    topic: string;
+    json: Record<string, any>;
+    createdAt?: Date;
+  }) => {
     if (json.device?.ieeeAddr && json.device?.model) {
       const {
         device: { ieeeAddr },
       } = json;
-
+      // console.log(json);
       const device = await Device.findOne({ where: { ieeeAddr }, attributes: ['id'] });
       let deviceId: number;
       if (!device) {
@@ -48,12 +55,12 @@ export default {
         let modelId: string;
         if (!deviceModel) {
           console.log('new model, adding');
-          ({ id: modelId } = await new DeviceModel({ id: json.device.model }).save());
+          ({ id: modelId } = await new DeviceModel({ id: json.device.model, createdAt }).save());
         } else {
           modelId = deviceModel.id;
         }
 
-        ({ id: deviceId } = await new Device({ ...json.device, modelId, locationId: 1 }).save());
+        ({ id: deviceId } = await new Device({ ...json.device, modelId, locationId: 1, createdAt }).save());
       } else {
         deviceId = device.id;
       }
@@ -63,22 +70,26 @@ export default {
           deviceId,
           topic,
           last_seen: new Date(json.last_seen),
-          // last_seen: null,
+          createdAt,
         }).save();
         if (typeof json.humidity !== 'undefined' && typeof json.temperature !== 'undefined') {
-          await new Climate({ ...json, eventId }).save();
+          await new Climate({ ...json, eventId, createdAt }).save();
           return;
         }
         if (typeof json.consumption !== 'undefined') {
-          await new Consumption({ ...json, eventId }).save();
+          await new Consumption({ ...json, eventId, createdAt }).save();
           return;
         }
         if (typeof json.occupancy !== 'undefined') {
-          await new Occupancy({ ...json, eventId }).save();
+          await new Occupancy({ ...json, eventId, createdAt }).save();
           return;
         }
         if (typeof json.click !== 'undefined') {
-          await new Click({ ...json, eventId }).save();
+          await new Click({ ...json, eventId, createdAt }).save();
+          return;
+        }
+        if (json.device?.model === 'WXKG11LM') {
+          // just keep-alive from click device
           return;
         }
         console.log('Unknown type', topic, json);

@@ -1,6 +1,7 @@
 version: '3'
 volumes:
   postgresdb:
+  grafana:
 services:
   # server:
   #   build:
@@ -15,6 +16,26 @@ services:
   #   # command: tail -f /dev/null
   #   env_file:
   #     - ./server/.dev.env
+  grafana:
+    restart: always
+    image: grafana/grafana
+    volumes:
+      - grafana:/var/lib/grafana
+    ports:
+      - 6604:3000
+  # zigbee2mqttAssistant:
+  #   image: carldebilly/zigbee2mqttassistant
+  #   container_name: zigbee2mqttAssistant
+  #   environment:
+  #     - Z2MA_SETTINGS__MQTTSERVER=verne
+  #     - Z2MA_SETTINGS__MQTTUSERNAME=""
+  #     - Z2MA_SETTINGS__MQTTPASSWORD=""
+  #     - Z2MA_SETTINGS__MQTTPORT=1883
+  #     - Z2MA_SETTINGS__BASETOPIC=zigbee2mqtt2
+  #     - TZ=Asia/Makassar
+  #   ports:
+  #     - 6605:80
+  #   restart: always
   postgres:
     image: postgres:latest
     restart: always

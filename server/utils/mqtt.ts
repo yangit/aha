@@ -24,6 +24,9 @@ export default async () => {
     });
   });
   console.log(`Mqtt subscribed to ${masterTopic}`);
+  client.on('error', async error => {
+    console.log('MQTT error', error);
+  });
   client.on('message', async (topic, buffer) => {
     const json = (string => {
       try {
@@ -35,4 +38,5 @@ export default async () => {
     await new Message({ topic, json }).save();
     await messageToDB.map({ topic, json });
   });
+  return client;
 };
