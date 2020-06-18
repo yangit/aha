@@ -6,4 +6,5 @@ export default async () => {
     console.log('added deafult location');
     await new Location({ name: 'default' }).save();
   }
+  console.log('DB seeded');
 };

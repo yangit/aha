@@ -4,25 +4,30 @@ import { DeviceModel } from '../models/deviceModel';
 import { Climate } from '../models/climate';
 import { Consumption } from '../models/consumption';
 import { Location } from '../models/location';
+import { Occupancy } from '../models/occupancy';
 import seedDb from '../utils/seedDb';
 
 export default {
   onStart: async () => {
     await Climate.drop();
     await Consumption.drop();
+    await Occupancy.drop();
     await Event.drop();
     await Device.drop();
     await DeviceModel.drop();
     await Location.drop();
     console.log('Models dropped');
+
     await DeviceModel.sync();
     await Location.sync();
     await Device.sync();
     await Event.sync();
     await Climate.sync();
     await Consumption.sync();
-    await seedDb();
+    await Occupancy.sync();
     console.log('Models synced');
+
+    await seedDb();
   },
   onEnd: async () => {},
   map: async ({ topic, json }: { topic: string; json: Record<string, any> }) => {
@@ -56,12 +61,19 @@ export default {
           last_seen: new Date(json.last_seen),
           // last_seen: null,
         }).save();
-        if (json.humidity && json.temperature) {
+        if (typeof json.humidity !== 'undefined' && typeof json.temperature !== 'undefined') {
           await new Climate({ ...json, eventId }).save();
+          return;
         }
-        if (json.consumption) {
+        if (typeof json.consumption !== 'undefined') {
           await new Consumption({ ...json, eventId }).save();
+          return;
         }
+        if (typeof json.occupancy !== 'undefined') {
+          await new Occupancy({ ...json, eventId }).save();
+          return;
+        }
+        console.log('Unknown type', topic, json);
       }
     }
   },
