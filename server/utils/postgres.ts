@@ -9,6 +9,7 @@ import { ConsumptionInit, Consumption } from '../models/consumption';
 import { DeviceModelInit, DeviceModel } from '../models/deviceModel';
 import { LocationInit, Location } from '../models/location';
 import { OccupancyInit, Occupancy } from '../models/occupancy';
+import { ClickInit, Click } from '../models/click';
 import seedDb from './seedDb';
 
 export default async () => {
@@ -38,6 +39,7 @@ export default async () => {
   ClimateInit(sequelize);
   ConsumptionInit(sequelize);
   OccupancyInit(sequelize);
+  ClickInit(sequelize);
   Device.belongsTo(DeviceModel, {
     foreignKey: {
       name: 'modelId',
@@ -69,6 +71,12 @@ export default async () => {
     },
   });
   Occupancy.belongsTo(Event, {
+    foreignKey: {
+      name: 'eventId',
+      allowNull: false,
+    },
+  });
+  Click.belongsTo(Event, {
     foreignKey: {
       name: 'eventId',
       allowNull: false,

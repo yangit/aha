@@ -3,28 +3,32 @@ import { Device } from '../models/device';
 import { DeviceModel } from '../models/deviceModel';
 import { Climate } from '../models/climate';
 import { Consumption } from '../models/consumption';
-import { Location } from '../models/location';
+// import { Location } from '../models/location';
 import { Occupancy } from '../models/occupancy';
+import { Click } from '../models/click';
 import seedDb from '../utils/seedDb';
 
 export default {
   onStart: async () => {
     await Climate.drop();
+    await Click.drop();
     await Consumption.drop();
     await Occupancy.drop();
     await Event.drop();
-    await Device.drop();
-    await DeviceModel.drop();
-    await Location.drop();
+
+    // await Device.drop();
+    // await DeviceModel.drop();
+    // await Location.drop();
     console.log('Models dropped');
 
-    await DeviceModel.sync();
-    await Location.sync();
-    await Device.sync();
+    // await DeviceModel.sync();
+    // await Location.sync();
+    // await Device.sync();
     await Event.sync();
     await Climate.sync();
     await Consumption.sync();
     await Occupancy.sync();
+    await Click.sync();
     console.log('Models synced');
 
     await seedDb();
@@ -71,6 +75,10 @@ export default {
         }
         if (typeof json.occupancy !== 'undefined') {
           await new Occupancy({ ...json, eventId }).save();
+          return;
+        }
+        if (typeof json.click !== 'undefined') {
+          await new Click({ ...json, eventId }).save();
           return;
         }
         console.log('Unknown type', topic, json);
