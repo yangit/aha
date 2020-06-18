@@ -3,6 +3,8 @@ import { Device } from '../models/device';
 import { DeviceModel } from '../models/deviceModel';
 import { Climate } from '../models/climate';
 import { Consumption } from '../models/consumption';
+import { Location } from '../models/location';
+import seedDb from '../utils/seedDb';
 
 export default {
   onStart: async () => {
@@ -11,13 +13,15 @@ export default {
     await Event.drop();
     await Device.drop();
     await DeviceModel.drop();
+    await Location.drop();
     console.log('Models dropped');
     await DeviceModel.sync();
+    await Location.sync();
     await Device.sync();
     await Event.sync();
     await Climate.sync();
     await Consumption.sync();
-
+    await seedDb();
     console.log('Models synced');
   },
   onEnd: async () => {},
@@ -40,7 +44,7 @@ export default {
           modelId = deviceModel.id;
         }
 
-        ({ id: deviceId } = await new Device({ ...json.device, modelId }).save());
+        ({ id: deviceId } = await new Device({ ...json.device, modelId, locationId: 1 }).save());
       } else {
         deviceId = device.id;
       }
