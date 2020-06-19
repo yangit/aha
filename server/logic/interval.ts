@@ -5,28 +5,15 @@ import { MqttClient } from 'mqtt';
 export default async (client: MqttClient) => {
   const topic = 'zigbee2mqtt/0x00158d0003a035e5/get';
   const value = JSON.stringify({ state: '' });
+  client.publish(topic, value, (...rest) => {
+    console.log(topic, rest);
+  });
 
-  // const topic = 'zigbee2mqtt/0x00158d0001f2ac03/get';
-  // const value = JSON.stringify({ temperature: '', humidity: '' });
-  // const value = JSON.stringify({ battery: '' });
-  // eslint-disable-next-line
-  // const value = '{\"humidity\":\"\"}';
+  const topic2 = 'zigbee2mqtt/0x00158d0001f2ac03/get';
+  const value2 = JSON.stringify({ temperature: '', humidity: '' });
 
-  // const topic = 'zigbee2mqtt/0x00158d0001f2ac03/get';
-
-  //
-  // const value = '{a:1}';
-  console.log({ value });
-  client.publish(
-    topic,
-    value,
-    // JSON.stringify({
-    //   temperature: '',
-    // }),
-    (...rest) => {
-      console.log(topic, rest);
-    },
-  );
-  //   console.log(result);
-  //
+  console.log({ value2 });
+  client.publish(topic2, value2, (...rest) => {
+    console.log(topic2, rest);
+  });
 };

@@ -27,6 +27,10 @@ export default async () => {
   client.on('error', async error => {
     console.log('MQTT error', error);
   });
+  client.on('offline', () => {
+    console.log('MQTT offline');
+    process.exit();
+  });
   client.on('message', async (topic, buffer) => {
     const json = (string => {
       try {
