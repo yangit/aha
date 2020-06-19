@@ -16,7 +16,7 @@
   "gnetId": null,
   "graphTooltip": 0,
   "id": 1,
-  "iteration": 1592554104888,
+  "iteration": 1592554104894,
   "links": [],
   "panels": [
     {
@@ -425,80 +425,8 @@
           "group": [],
           "metricColumn": "none",
           "rawQuery": true,
-          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\",device.id ) as ddevice,\n 1 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\n\nWHERE\n  $__timeFilter(event.\"createdAt\") AND device.\"modelId\"='WXKG11LM' and device.id IN ($device)\nORDER BY 1\n",
+          "rawSql": "SELECT\n    event. \"createdAt\" AS \"time\",\n    concat_ws('.', location.name, device. \"name\", \"deviceModel\".\"name\", device.id) AS ddevice,\n    device.id AS value\nFROM\n    event\n    LEFT JOIN device ON event. \"deviceId\" = device.id\n    LEFT JOIN LOCATION ON device. \"locationId\" = location.id\n    LEFT JOIN \"deviceModel\" ON device. \"modelId\" = \"deviceModel\".id\nWHERE\n    event. \"createdAt\" BETWEEN '2020-06-19T02:47:24.671Z'\n    AND '2020-06-19T08:47:24.671Z'\n    AND device.id IN ($device)\nORDER BY\n    1\n",
           "refId": "A",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "column"
-              }
-            ]
-          ],
-          "timeColumn": "time",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        },
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\",device.id ) as ddevice,\n 2 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\n\nWHERE\n  $__timeFilter(event.\"createdAt\") AND device.\"modelId\"='WSDCGQ01LM' and device.id IN ($device)\nORDER BY 1\n",
-          "refId": "B",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "column"
-              }
-            ]
-          ],
-          "timeColumn": "time",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        },
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\",device.id ) as ddevice,\n 0 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\n\nWHERE\n  $__timeFilter(event.\"createdAt\") AND device.\"modelId\"='ZNCZ02LM' and device.id IN ($device)\nORDER BY 1\n",
-          "refId": "C",
-          "select": [
-            [
-              {
-                "params": ["value"],
-                "type": "column"
-              }
-            ]
-          ],
-          "timeColumn": "time",
-          "where": [
-            {
-              "name": "$__timeFilter",
-              "params": [],
-              "type": "macro"
-            }
-          ]
-        },
-        {
-          "format": "time_series",
-          "group": [],
-          "metricColumn": "none",
-          "rawQuery": true,
-          "rawSql": "SELECT\n  event.\"createdAt\" AS \"time\",\n concat_ws( '.', location.name, device.\"name\", \"deviceModel\".\"name\",device.id ) as ddevice,\n 3 as value\nFROM event\nLEFT JOIN device ON event.\"deviceId\" = device.id\nLEFT JOIN location ON device.\"locationId\" = location.id\nLEFT JOIN \"deviceModel\" ON device.\"modelId\" = \"deviceModel\".id\n\nWHERE\n  $__timeFilter(event.\"createdAt\") AND device.\"modelId\"='RTCGQ01LM' and device.id IN ($device)\nORDER BY 1\n",
-          "refId": "D",
           "select": [
             [
               {
@@ -702,8 +630,8 @@
         "allValue": null,
         "current": {
           "selected": true,
-          "text": "All",
-          "value": ["$__all"]
+          "text": "default.plugSocket.2",
+          "value": ["2"]
         },
         "datasource": "PostgreSQL",
         "definition": "SELECT\n    device.id AS __value,\n    concat_ws('.', location.name, device. \"name\", \"deviceModel\".\"name\", device.id) AS __text\nFROM\n    device\n    LEFT JOIN LOCATION ON device. \"locationId\" = location.id\n    LEFT JOIN \"deviceModel\" ON device. \"modelId\" = \"deviceModel\".id\nORDER BY\n    device.id\n",
@@ -746,5 +674,5 @@
   "timezone": "",
   "title": "Aha",
   "uid": "G_hGxnWGz",
-  "version": 24
+  "version": 26
 }
